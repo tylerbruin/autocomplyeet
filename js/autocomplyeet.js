@@ -59,7 +59,7 @@ function autocomplyeet(searchParams){
                         item.innerHTML = output;
                         item.setAttribute("tabindex", "1");
                         item.classList.add("ac-item");
-                        autocomplete.append(item);
+                        autocomplete.appendChild(item);
 
                         item.addEventListener("keydown", function(e){
                             if (e.key == "ArrowDown") {
