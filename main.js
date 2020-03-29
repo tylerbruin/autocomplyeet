@@ -42,7 +42,12 @@ document.addEventListener("DOMContentLoaded", function(){
                 
                 if (data.length > 0) {
 
-                    ac_container.setAttribute('data-before', data[0]);
+                    // Morph Data to correct casing
+                    var ac_suggest = data[0];
+                    ac_suggest = ac_suggest.substring(input.value.length);
+                    ac_suggest = input.value + ac_suggest;
+
+                    ac_container.setAttribute('data-before', ac_suggest);
                     autocomplete.innerHTML = "";
                     autocomplete.style.width = input.offsetWidth + "px";
 
