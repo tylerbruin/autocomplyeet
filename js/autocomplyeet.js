@@ -63,14 +63,17 @@ function autocomplyeet(searchParams){
 
                         item.addEventListener("keydown", function(e){
                             if (e.key == "ArrowDown") {
+                                e.preventDefault();
                                 this.nextSibling.focus();
                             } else if (e.key == "ArrowUp"){
                                 if (this.previousSibling !== null ){
+                                    e.preventDefault();
                                     this.previousSibling.focus();
                                 } else {
                                     input.focus();
                                 }
                             } else if (e.key == "Enter") {
+                                e.preventDefault();
                                 ac_container.setAttribute('data-before', "");
                                 input.value = this.innerText;
                                 input.focus();
@@ -112,6 +115,7 @@ function autocomplyeet(searchParams){
 
     input.addEventListener("keydown", function(e){
         if (input.value.length > 2 && e.key == "ArrowDown" && document.querySelector("#ac-list li") !== null) {
+            e.preventDefault();
             document.querySelector("#ac-list li:first-child").focus();
         }
     });
