@@ -1,7 +1,7 @@
 .ac-container {
     display: inline-flex;
     position: relative;
-    width: 100%;
+    flex: 1 1 auto;
     height: 100%;
     background-color: #fff;
     
@@ -42,11 +42,16 @@
         box-sizing: border-box;
 
         li {
+            list-style-type: none;
             line-height: 1.5;
             padding: 1px;
             border-left: 1px solid #e6e6e6;
             border-right: 1px solid #e6e6e6;
             cursor: pointer;
+
+            &:before {
+                content: none;
+            }
 
             &:last-child {
                 border-bottom: 1px solid #e6e6e6;
