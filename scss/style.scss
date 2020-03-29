@@ -1,0 +1,55 @@
+.ac-container {
+    display: inline-flex;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background-color: #fff;
+    
+    input {
+        z-index: 3;
+        background-color: transparent;
+    }
+
+    &:before {
+        content: attr(data-before);
+        display: inline-flex;
+        align-items: center;
+        position: absolute;
+        color: grey;
+        font: 400 1.5rem system-ui;
+        bottom: 0;
+        height: 100%;
+        width: 100%;
+        padding: 3px;
+        box-sizing: border-box;
+        overflow: scroll;
+        z-index: 1;
+        pointer-events: none;
+
+        // TODO - Detect font styles, padding/margin/border 
+    }
+
+
+    #ac-list {
+        position: absolute;
+        background-color: white;
+        border: 1px solid #e6e6e6;
+        border-bottom-left-radius: 5px;
+        border-bottom-right-radius: 5px;
+        box-shadow: 0 0 10px 0 rgba(0,0,0,0.15);
+        padding: 0;
+        margin: 0;
+        top: 100%;
+        list-style: none;
+        box-sizing: border-box;
+
+        li {
+            line-height: 1.5;
+            padding: 1px;
+
+            &:hover {
+                background-color: #e6e6e655;
+            }
+        }
+    }
+}
