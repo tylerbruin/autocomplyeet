@@ -16,22 +16,21 @@ document.addEventListener("DOMContentLoaded", function(){
     input.parentNode.insertBefore(ac_container, input);
     ac_container.appendChild(input);
     ac_container.appendChild(autocomplete);
-    // var input_bg = input.style.backgroundColor  ? input.style.backgroundColor : "#fff";
-    // ac_container.style.backgroundColor = "#fff";
-    // input.style.backgroundColor = "transparent";
 
-
-    
     // Focus Out Event
-    input.addEventListener("focusout", function(){
-        autocomplete.innerHTML = "";
-        ac_container.setAttribute('data-before', "");
+    input.addEventListener("focusout", function(e){
+        if (e.relatedTarget == null) {
+            autocomplete.innerHTML = "";
+            ac_container.setAttribute('data-before', "");
+        } else if (e.relatedTarget.className !== "ac-item") {
+            autocomplete.innerHTML = "";
+            ac_container.setAttribute('data-before', "");
+        }
     });
 
     // Text Input Event
     input.addEventListener("input", function(){
         // console.log("Input detected!");
-
         if (input.value.length > 2) {
 
             // Send request
@@ -44,7 +43,6 @@ document.addEventListener("DOMContentLoaded", function(){
                 if (data.length > 0) {
 
                     ac_container.setAttribute('data-before', data[0]);
-
                     autocomplete.innerHTML = "";
                     autocomplete.style.width = input.offsetWidth + "px";
 
@@ -53,8 +51,38 @@ document.addEventListener("DOMContentLoaded", function(){
                         var item = document.createElement("li");
                         item.innerText = data[i];
                         item.setAttribute("tabindex", "1");
+                        item.classList.add("ac-item");
                         autocomplete.append(item);
-                    }
+
+                        item.addEventListener("keydown", function(e){
+                            if (e.key == "ArrowDown") {
+                                this.nextSibling.focus();
+                            } else if (e.key == "ArrowUp"){
+                                if (this.previousSibling !== null ){
+                                    this.previousSibling.focus();
+                                } else {
+                                    input.focus();
+                                }
+                            } else if (e.key == "Enter") {
+                                ac_container.setAttribute('data-before', "");
+                                input.value = this.innerText;
+                                input.focus();
+                            }
+                        });
+
+                        item.addEventListener("focusout", function(e){
+                            if (e.relatedTarget == null) {
+                                autocomplete.innerHTML = "";
+                                ac_container.setAttribute('data-before', "");
+                            } else if (e.relatedTarget.className == "ac-item" || e.relatedTarget.id == "search") { 
+                                return false;
+                            } else {
+                                autocomplete.innerHTML = "";
+                                ac_container.setAttribute('data-before', "");
+                            }
+
+                        });
+                    } 
                 } else {
                     autocomplete.innerHTML = "";
                     ac_container.setAttribute('data-before', "");
@@ -66,6 +94,12 @@ document.addEventListener("DOMContentLoaded", function(){
             ac_container.setAttribute('data-before', "");
         }
 
+    });
+
+    input.addEventListener("keydown", function(e){
+        if (input.value.length > 2 && e.key == "ArrowDown" && document.querySelector("#ac-list li") !== null) {
+            document.querySelector("#ac-list li:first-child").focus();
+        }
     });
 
 });
