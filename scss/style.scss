@@ -22,22 +22,20 @@
         width: 100%;
         padding: 3px;
         box-sizing: border-box;
-        overflow: scroll;
+        overflow: hidden;
         z-index: 1;
         pointer-events: none;
 
-        // TODO - Detect font styles, padding/margin/border 
     }
 
 
     #ac-list {
         position: absolute;
         background-color: white;
-        border: 1px solid #e6e6e6;
-        border-bottom-left-radius: 5px;
-        border-bottom-right-radius: 5px;
         box-shadow: 0 0 10px 0 rgba(0,0,0,0.15);
         padding: 0;
+        border-bottom-left-radius: 5px;
+        border-bottom-right-radius: 5px;
         margin: 0;
         top: 100%;
         list-style: none;
@@ -46,9 +44,23 @@
         li {
             line-height: 1.5;
             padding: 1px;
+            border-left: 1px solid #e6e6e6;
+            border-right: 1px solid #e6e6e6;
+            cursor: pointer;
+
+            &:last-child {
+                border-bottom: 1px solid #e6e6e6;
+                border-bottom-left-radius: 5px;
+                border-bottom-right-radius: 5px;
+
+            }
 
             &:hover {
                 background-color: #e6e6e655;
+            }
+
+            .ac-highlight {
+                font-weight: bold;
             }
         }
     }

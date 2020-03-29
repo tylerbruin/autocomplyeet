@@ -54,7 +54,9 @@ document.addEventListener("DOMContentLoaded", function(){
                     // Print suggestions
                     for(var i=0;i<data.length;i++){
                         var item = document.createElement("li");
-                        item.innerText = data[i];
+
+                        var output = data[i].replace(new RegExp('(' + input.value.toLowerCase() + ')'), '<span class="ac-highlight">'+ input.value +'</span>');
+                        item.innerHTML = output;
                         item.setAttribute("tabindex", "1");
                         item.classList.add("ac-item");
                         autocomplete.append(item);
@@ -73,6 +75,13 @@ document.addEventListener("DOMContentLoaded", function(){
                                 input.value = this.innerText;
                                 input.focus();
                             }
+                        });
+
+                        item.addEventListener("click", function(e){
+                            input.value = this.innerText;
+                            autocomplete.innerHTML = "";
+                            ac_container.setAttribute('data-before', "");
+                            input.focus();
                         });
 
                         item.addEventListener("focusout", function(e){
