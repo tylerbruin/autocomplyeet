@@ -1,3 +1,4 @@
+// Autocomplyeet 1.0 - https://github.com/tylerbruin/autocomplyeet
 function ajaxRequest(e,t,n,a){let s=new XMLHttpRequest;s.open(e,t,!0),"POST"==e&&s.setRequestHeader("Content-Type","application/x-www-form-urlencoded"),s.onreadystatechange=function(){if(4==s.readyState&&200==s.status){let e=s.responseText;a(e)}},s.send(n)}
 
 function autocomplyeet(searchParams){
