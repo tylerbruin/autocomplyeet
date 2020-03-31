@@ -15,17 +15,33 @@ function autocomplyeet(searchParams){
     const ac_container = document.createElement("div");
     ac_container.classList.add("ac-container");
     input.parentNode.insertBefore(ac_container, input);
+    
+    const ac_querySuggestion = document.createElement("pre");
+    ac_querySuggestion.setAttribute("id", "ac-querySuggestion");
+    ac_container.appendChild(ac_querySuggestion);
     ac_container.appendChild(input);
     ac_container.appendChild(autocomplete);
+
+    // Style query suggestion el
+    ac_querySuggestion.style.fontSize = window.getComputedStyle(input, null).getPropertyValue("font-size");
+    ac_querySuggestion.style.fontWeight = window.getComputedStyle(input, null).getPropertyValue("font-weight");
+    ac_querySuggestion.style.letterSpacing = window.getComputedStyle(input, null).getPropertyValue("letter-spacing");
+    ac_querySuggestion.style.padding = window.getComputedStyle(input, null).getPropertyValue("padding");
+    var ac_querySuggestion_padding = parseInt(window.getComputedStyle(input, null).getPropertyValue("border-left-width")) + parseInt(window.getComputedStyle(input, null).getPropertyValue("margin-left")) + parseInt(window.getComputedStyle(input, null).getPropertyValue("padding-left"));
+    ac_querySuggestion.style.paddingLeft = ac_querySuggestion_padding + "px";
+    
+
+    // ac_querySuggestion.style.border = window.getComputedStyle(input, null).getPropertyValue("border-left-width");
+    // ac_querySuggestion.style.marginLeft = window.getComputedStyle(input, null).getPropertyValue("margin-left");
 
     // Focus Out Event
     input.addEventListener("focusout", function(e){
         if (e.relatedTarget == null) {
             autocomplete.innerHTML = "";
-            ac_container.setAttribute('data-before', "");
+            ac_querySuggestion.innerText = "";
         } else if (e.relatedTarget.className !== "ac-item") {
             autocomplete.innerHTML = "";
-            ac_container.setAttribute('data-before', "");
+            ac_querySuggestion.innerText = "";
         }
     });
 
@@ -47,7 +63,7 @@ function autocomplyeet(searchParams){
                     ac_suggest = ac_suggest.substring(input.value.length);
                     ac_suggest = input.value + ac_suggest;
 
-                    ac_container.setAttribute('data-before', ac_suggest);
+                    ac_querySuggestion.innerText =  ac_suggest;
                     autocomplete.innerHTML = "";
                     autocomplete.style.width = input.offsetWidth + "px";
 
@@ -74,7 +90,7 @@ function autocomplyeet(searchParams){
                                 }
                             } else if (e.key == "Enter") {
                                 e.preventDefault();
-                                ac_container.setAttribute('data-before', "");
+                                ac_querySuggestion.innerText = "";
                                 input.value = this.innerText;
                                 input.focus();
                             }
@@ -83,32 +99,32 @@ function autocomplyeet(searchParams){
                         item.addEventListener("click", function(e){
                             input.value = this.innerText;
                             autocomplete.innerHTML = "";
-                            ac_container.setAttribute('data-before', "");
+                            ac_querySuggestion.innerText = "";
                             input.focus();
                         });
 
                         item.addEventListener("focusout", function(e){
                             if (e.relatedTarget == null) {
                                 autocomplete.innerHTML = "";
-                                ac_container.setAttribute('data-before', "");
+                                ac_querySuggestion.innerText = "";
                             } else if (e.relatedTarget.className == "ac-item" || e.relatedTarget.id == "search") { 
                                 return false;
                             } else {
                                 autocomplete.innerHTML = "";
-                                ac_container.setAttribute('data-before', "");
+                                ac_querySuggestion.innerText = "";
                             }
 
                         });
                     } 
                 } else {
                     autocomplete.innerHTML = "";
-                    ac_container.setAttribute('data-before', "");
+                    ac_querySuggestion.innerText = "";
                 }
 
             });
         } else {
             autocomplete.innerHTML = "";
-            ac_container.setAttribute('data-before', "");
+            ac_querySuggestion.innerText = "";
         }
 
     });
