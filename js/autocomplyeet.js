@@ -76,17 +76,17 @@ function autocomplyeet(searchParams){
                         autocomplete.appendChild(item);
 
                         item.addEventListener("keydown", function(e){
-                            if (e.key == "ArrowDown") {
+                            if (e.keyCode == "40") {
                                 e.preventDefault();
                                 this.nextSibling.focus();
-                            } else if (e.key == "ArrowUp"){
+                            } else if (e.keyCode == "38"){
                                 if (this.previousSibling !== null ){
                                     e.preventDefault();
                                     this.previousSibling.focus();
                                 } else {
                                     input.focus();
                                 }
-                            } else if (e.key == "Enter") {
+                            } else if (e.keyCode == "13") {
                                 e.preventDefault();
                                 ac_querySuggestion.innerText = "";
                                 input.value = this.innerText;
@@ -127,11 +127,11 @@ function autocomplyeet(searchParams){
 
     });
 
+
     input.addEventListener("keydown", function(e){
-        if (input.value.length > 2 && e.key == "ArrowDown" && document.querySelector("#ac-list li") !== null) {
+        if (input.value.length > 2 && e.keyCode == "40" && document.querySelector("#ac-list li") !== null) {
             e.preventDefault();
             document.querySelector("#ac-list li:first-child").focus();
         }
     });
-
 }
