@@ -7,30 +7,7 @@
     
     input {
         z-index: 3;
-        background-color: transparent;
     }
-
-    // &:before {
-    //     content: attr(data-before);
-    //     display: inline-flex;
-    //     align-items: center;
-    //     position: absolute;
-    //     color: grey;
-    //     font: 400 11px system-ui;
-    //     font-size: inherit;
-    //     bottom: 0;
-    //     height: 100%;
-    //     width: 100%;
-    //     padding-left: inherit;
-    //     box-sizing: border-box;
-    //     overflow: hidden;
-    //     z-index: 1;
-    //     pointer-events: none;
-
-    //     @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) { 
-    //         content: none;
-    //     }
-    // }
 
     pre {
         display: inline-flex;

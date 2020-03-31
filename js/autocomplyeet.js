@@ -22,17 +22,15 @@ function autocomplyeet(searchParams){
     ac_container.appendChild(input);
     ac_container.appendChild(autocomplete);
 
-    // Style query suggestion el
-    ac_querySuggestion.style.fontSize = window.getComputedStyle(input, null).getPropertyValue("font-size");
-    ac_querySuggestion.style.fontWeight = window.getComputedStyle(input, null).getPropertyValue("font-weight");
+    // Style query suggestion element
+    ac_querySuggestion.style.font = window.getComputedStyle(input, null).getPropertyValue("font");
+    ac_querySuggestion.style.background = window.getComputedStyle(input, null).getPropertyValue("background");
+    input.style.backgroundColor = "transparent";
     ac_querySuggestion.style.letterSpacing = window.getComputedStyle(input, null).getPropertyValue("letter-spacing");
     ac_querySuggestion.style.padding = window.getComputedStyle(input, null).getPropertyValue("padding");
     var ac_querySuggestion_padding = parseInt(window.getComputedStyle(input, null).getPropertyValue("border-left-width")) + parseInt(window.getComputedStyle(input, null).getPropertyValue("margin-left")) + parseInt(window.getComputedStyle(input, null).getPropertyValue("padding-left"));
     ac_querySuggestion.style.paddingLeft = ac_querySuggestion_padding + "px";
     
-
-    // ac_querySuggestion.style.border = window.getComputedStyle(input, null).getPropertyValue("border-left-width");
-    // ac_querySuggestion.style.marginLeft = window.getComputedStyle(input, null).getPropertyValue("margin-left");
 
     // Focus Out Event
     input.addEventListener("focusout", function(e){
