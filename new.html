@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Media Feed</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://unpkg.com/css.gg/icons-compressed/icons.css">
+    <link rel="stylesheet" href="css/autocomplyeet.min.css">
+    <script src="js/autocomplyeet.min.js"></script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header title">
+                <h1>Autocomplyeet</h1>
+            </div>
+            <nav class="header nav">
+                <ul>
+                    <li><a href="#1">Link 1</a></li>
+                    <li><a href="#2">Link 2</a></li>
+                    <li><a href="#3">Link 3</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <section id="greeting">
+        <div class="container">
+            <div class="greeting-text">
+                <h2>Vanilla Js, Zero dependancy autocomplete </h2>
+                <p>light weight, easy, absolutely s*** name but does the job</p>
+            </div>
+            <form id="ac-demo">
+                <div class="input-group">
+                    <input type="text" name="query" id="search">
+                    <button type="submit">Submit</button>
+                </div>
+            </form>
+            <div class="code">
+                <h2>Code include</h2>
+                <pre><code>
+                &lt;script defer&gt;
+                    var searchParams = {
+                        id: &quot;#search&quot;, 
+                        server: &quot;https://<span style="color: #ff0340">FB-SERVER</span>/s/suggest.json?collection=<span style="color: #ff0340">COLLECTION</span>&amp;show=10&amp;partial_query=&quot;
+                    };
+                    autocomplyeet(searchParams);
+                &lt;/script&gt;
+                </code></pre>
+            </div>  
+        </div>
+    </section>
+    <footer></footer>
+    <script defer>
+        var searchParams = {
+            id: "#search", 
+            server: "https://squiznz-dev-search.squiz.cloud/s/suggest.json?collection=FbNeoDemo&show=10&partial_query="
+        };
+        autocomplyeet(searchParams);
+    </script>
+    <div class="toaster"><div id="bread"><i class="gg-comment"></i></div></div>
+    <script src="toaster.js"></script>
+</body>
+</html>
