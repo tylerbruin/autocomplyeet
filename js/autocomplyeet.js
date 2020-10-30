@@ -13,7 +13,6 @@ window.autocomplyeet = {
 
 autocomplyeet.fn.init = function () {
 
-
     // if IE11, Disable Query Finisher as we like to support IE11 but also we kinda dont.
     autocomplyeet.vars.isIE11 = !!window.MSInputMethodContext && !!document.documentMode;
 
@@ -43,16 +42,19 @@ autocomplyeet.fn.init = function () {
         
         // autocomplyeet.vars.querySuggestion.style.width = autocomplyeet.vars.input.clientWidth + "px";
     }
+    
+    // Query Finisher, Create Fake Input to display query suggestion
+    autocomplyeet.vars.querySuggestion = document.createElement("input");
+    autocomplyeet.vars.querySuggestion.setAttribute("id", "ac-querySuggestion");
+    autocomplyeet.vars.querySuggestion.setAttribute("tabIndex", -1);
+    autocomplyeet.vars.querySuggestion.setAttribute("readonly", true);
+    autocomplyeet.vars.querySuggestion.setAttribute("aria-hidden", true);
 
-    if(!autocomplyeet.vars.isIE11) {
-        // Query Finisher, Create Fake Input to display query suggestion
-        autocomplyeet.vars.querySuggestion = document.createElement("input");
-        autocomplyeet.vars.querySuggestion.setAttribute("id", "ac-querySuggestion");
-        autocomplyeet.vars.querySuggestion.setAttribute("tabIndex", -1);
-        autocomplyeet.vars.querySuggestion.setAttribute("readonly", true);
-        autocomplyeet.vars.querySuggestion.setAttribute("aria-hidden", true);
+    if(autocomplyeet.vars.isIE11) {
+        autocomplyeet.vars.querySuggestion.style.display = "none";
     }
 
+    
 
 
     // Reassemble the DOM
