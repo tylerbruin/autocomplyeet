@@ -16,6 +16,10 @@
         opacity: 0.5 !important;
         pointer-events: none !important;
         border-color: transparent !important;
+
+        @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+            display: none !important;
+        }
     }
 
     #ac-list {

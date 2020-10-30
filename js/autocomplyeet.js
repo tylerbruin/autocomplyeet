@@ -13,14 +13,6 @@ window.autocomplyeet = {
 
 autocomplyeet.fn.init = function () {
 
-    // if IE11, Disable Query Finisher as we like to support IE11 but also we kinda dont.
-    autocomplyeet.vars.isIE11 = !!window.MSInputMethodContext && !!document.documentMode;
-
-    if(autocomplyeet.vars.isIE11) {
-        autocomplyeet.options.cloneCSS = false;
-    }
-
-
     autocomplyeet.vars.input = document.querySelector(autocomplyeet.options.id);
     autocomplyeet.vars.input.setAttribute("autocomplete", "off");
     autocomplyeet.vars.input.style.backgroundColor = "transparent";
@@ -47,10 +39,6 @@ autocomplyeet.fn.init = function () {
     autocomplyeet.vars.querySuggestion.setAttribute("tabIndex", -1);
     autocomplyeet.vars.querySuggestion.setAttribute("readonly", true);
     autocomplyeet.vars.querySuggestion.setAttribute("aria-hidden", true);
-
-    if(autocomplyeet.vars.isIE11) {
-        autocomplyeet.vars.querySuggestion.style.display = "none";
-    }
 
     // Reassemble the DOM
     autocomplyeet.vars.container.appendChild(autocomplyeet.vars.styles);
