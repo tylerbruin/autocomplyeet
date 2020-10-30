@@ -15,7 +15,8 @@ autocomplyeet.fn.init = function () {
 
     autocomplyeet.vars.input = document.querySelector(autocomplyeet.options.id);
     autocomplyeet.vars.input.setAttribute("autocomplete", "off");
-
+    autocomplyeet.vars.input.style.backgroundColor = "transparent";
+    
     // Create Autocomplete Elements
     autocomplyeet.vars.list = document.createElement("ul");
     autocomplyeet.vars.list.setAttribute("id", "ac-list");
@@ -29,8 +30,8 @@ autocomplyeet.fn.init = function () {
         autocomplyeet.vars.styles = document.createElement("style");
         autocomplyeet.vars.styles.type = 'text/css';
         autocomplyeet.fn.cloneCSS();
-        // Set Primarily inputs background to transparent 
-        autocomplyeet.vars.input.style.backgroundColor = "transparent";
+        
+        // autocomplyeet.vars.querySuggestion.style.width = autocomplyeet.vars.input.clientWidth + "px";
     }
 
     // Create Fake Input
@@ -38,6 +39,7 @@ autocomplyeet.fn.init = function () {
     autocomplyeet.vars.querySuggestion.setAttribute("id", "ac-querySuggestion");
     autocomplyeet.vars.querySuggestion.setAttribute("tabIndex", -1);
     autocomplyeet.vars.querySuggestion.setAttribute("readonly", true);
+    autocomplyeet.vars.querySuggestion.setAttribute("aria-hidden", true);
 
     // Reassemble the DOM
     autocomplyeet.vars.container.appendChild(autocomplyeet.vars.styles);
@@ -46,6 +48,7 @@ autocomplyeet.fn.init = function () {
     autocomplyeet.vars.container.appendChild(autocomplyeet.vars.list);
 
 
+    //* All Event Listeners Below
 
     // Focus Out Event
     autocomplyeet.vars.input.addEventListener("focusout", function (e) {

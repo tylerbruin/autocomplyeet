@@ -3,28 +3,13 @@
     position: relative;
     flex: 1 1 auto;
     height: 100%;
+    // width: 100%;
     background-color: #fff;
     
     input {
         z-index: 3;
     }
 
-    pre {
-        display: inline-flex;
-        align-items: center;
-        position: absolute;
-        color: grey;
-        font: 400 11px system-ui;
-        bottom: 0;
-        height: 100%;
-        width: 100%;
-        padding:0;
-        margin:0;
-        box-sizing: border-box;
-        overflow: hidden;
-        z-index: 1;
-        pointer-events: none;
-    }
 
     #ac-querySuggestion {
         position: absolute !important;
@@ -46,6 +31,7 @@
         list-style: none;
         box-sizing: border-box;
         z-index: 10;
+        text-align: left;
 
         li {
             list-style-type: none;
