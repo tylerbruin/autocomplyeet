@@ -18,7 +18,6 @@ autocomplyeet.fn.init = function () {
 
     if(autocomplyeet.vars.isIE11) {
         autocomplyeet.options.cloneCSS = false;
-        autocomplyeet.vars.querySuggestion.style.display = "none";
     }
 
 
@@ -39,7 +38,6 @@ autocomplyeet.fn.init = function () {
         autocomplyeet.vars.styles = document.createElement("style");
         autocomplyeet.vars.styles.type = 'text/css';
         autocomplyeet.fn.cloneCSS();
-        
         // autocomplyeet.vars.querySuggestion.style.width = autocomplyeet.vars.input.clientWidth + "px";
     }
     
@@ -53,9 +51,6 @@ autocomplyeet.fn.init = function () {
     if(autocomplyeet.vars.isIE11) {
         autocomplyeet.vars.querySuggestion.style.display = "none";
     }
-
-    
-
 
     // Reassemble the DOM
     autocomplyeet.vars.container.appendChild(autocomplyeet.vars.styles);
