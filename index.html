@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="css/default.min.css">
-    <link rel="stylesheet" href="css/autocomplyeet.min.css">
+    <link rel="stylesheet" href="scss/default.min.css">
+    <link rel="stylesheet" href="scss/autocomplyeet.min.css">
     <script src="js/autocomplyeet.js"></script>
 </head>
 <body>
@@ -24,12 +24,14 @@
         <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Aperiam ipsa vitae id harum recusandae magni, doloribus quo architecto at explicabo ullam debitis ad dolorum veritatis! Excepturi voluptas assumenda aliquam repudiandae.lorem Lorem ipsum dolor sit amet consectetur adipisicing elit. Incidunt consequatur iste rerum fugit vel non temporibus veniam qui, distinctio vitae praesentium cumque magnam, quidem at tempore id sed eum beatae.</p>
         <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Aperiam ipsa vitae id harum recusandae magni, doloribus quo architecto at explicabo ullam debitis ad dolorum veritatis! Excepturi voluptas assumenda aliquam repudiandae.lorem Lorem ipsum dolor sit amet consectetur adipisicing elit. Incidunt consequatur iste rerum fugit vel non temporibus veniam qui, distinctio vitae praesentium cumque magnam, quidem at tempore id sed eum beatae.</p>
     </div>
-    <script defer>
-        var searchParams = {
-            id: "#search", 
+    <script>
+        autocomplyeet.options = {
+            id: "#search",
+            cloneCSS: true,
+            cache: 5,
             server: "https://squiznz-dev-search.squiz.cloud/s/suggest.json?collection=FbNeoDemo&show=10&partial_query="
         };
-        autocomplyeet(searchParams);
+        autocomplyeet.fn.init();
     </script>
 </body>
 </html>

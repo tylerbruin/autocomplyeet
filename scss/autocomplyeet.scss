@@ -26,6 +26,13 @@
         pointer-events: none;
     }
 
+    #ac-querySuggestion {
+        position: absolute !important;
+        opacity: 0.5 !important;
+        pointer-events: none !important;
+        border-color: transparent !important;
+    }
+
     #ac-list {
         position: absolute;
         background-color: white;

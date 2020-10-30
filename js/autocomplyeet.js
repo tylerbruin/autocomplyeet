@@ -1,137 +1,222 @@
-// Autocomplyeet 1.0 - https://github.com/tylerbruin/autocomplyeet
-function ajaxRequest(e,t,n,a){let s=new XMLHttpRequest;s.open(e,t,!0),"POST"==e&&s.setRequestHeader("Content-Type","application/x-www-form-urlencoded"),s.onreadystatechange=function(){if(4==s.readyState&&200==s.status){let e=s.responseText;a(e)}},s.send(n)}
+// Autocomplyeet 2.0 - https://github.com/tylerbruin/autocomplyeet
+window.autocomplyeet = {
+    options: {
+        id: "",
+        server: "",
+        cache: 15,
+        cloneCSS: true,
+    },
+    vars: {},
+    cache: {},
+    fn: {}
+}
 
-function autocomplyeet(searchParams){
+autocomplyeet.fn.init = function () {
 
-    // Identify input & manipulate
-    const input = document.querySelector(searchParams.id);
-    input.setAttribute("autocomplete", "off");
+    autocomplyeet.vars.input = document.querySelector(autocomplyeet.options.id);
+    autocomplyeet.vars.input.setAttribute("autocomplete", "off");
 
     // Create Autocomplete Elements
-    const autocomplete = document.createElement("ul");
-    autocomplete.setAttribute("id", "ac-list");
-    
-    // Create Wrapper Element / Autocomplete Structure
-    const ac_container = document.createElement("div");
-    ac_container.classList.add("ac-container");
-    input.parentNode.insertBefore(ac_container, input);
-    
-    const ac_querySuggestion = document.createElement("pre");
-    ac_querySuggestion.setAttribute("id", "ac-querySuggestion");
-    ac_container.appendChild(ac_querySuggestion);
-    ac_container.appendChild(input);
-    ac_container.appendChild(autocomplete);
+    autocomplyeet.vars.list = document.createElement("ul");
+    autocomplyeet.vars.list.setAttribute("id", "ac-list");
 
-    // Style query suggestion element
-    ac_querySuggestion.style.font = window.getComputedStyle(input, null).getPropertyValue("font");
-    ac_querySuggestion.style.background = window.getComputedStyle(input, null).getPropertyValue("background");
-    input.style.backgroundColor = "transparent";
-    ac_querySuggestion.style.letterSpacing = window.getComputedStyle(input, null).getPropertyValue("letter-spacing");
-    ac_querySuggestion.style.padding = window.getComputedStyle(input, null).getPropertyValue("padding");
-    var ac_querySuggestion_padding = parseInt(window.getComputedStyle(input, null).getPropertyValue("border-left-width")) + parseInt(window.getComputedStyle(input, null).getPropertyValue("margin-left")) + parseInt(window.getComputedStyle(input, null).getPropertyValue("padding-left"));
-    ac_querySuggestion.style.paddingLeft = ac_querySuggestion_padding + "px";
-    
+    // Create Wrapper Element / Autocomplete Structure
+    autocomplyeet.vars.container = document.createElement("div");
+    autocomplyeet.vars.container.classList.add("ac-container");
+    autocomplyeet.vars.input.parentNode.insertBefore(autocomplyeet.vars.container, autocomplyeet.vars.input);
+
+    if (autocomplyeet.options.cloneCSS) {
+        autocomplyeet.vars.styles = document.createElement("style");
+        autocomplyeet.vars.styles.type = 'text/css';
+        autocomplyeet.fn.cloneCSS();
+        // Set Primarily inputs background to transparent 
+        autocomplyeet.vars.input.style.backgroundColor = "transparent";
+    }
+
+    // Create Fake Input
+    autocomplyeet.vars.querySuggestion = document.createElement("input");
+    autocomplyeet.vars.querySuggestion.setAttribute("id", "ac-querySuggestion");
+    autocomplyeet.vars.querySuggestion.setAttribute("tabIndex", -1);
+    autocomplyeet.vars.querySuggestion.setAttribute("readonly", true);
+
+    // Reassemble the DOM
+    autocomplyeet.vars.container.appendChild(autocomplyeet.vars.styles);
+    autocomplyeet.vars.container.appendChild(autocomplyeet.vars.querySuggestion);
+    autocomplyeet.vars.container.appendChild(autocomplyeet.vars.input);
+    autocomplyeet.vars.container.appendChild(autocomplyeet.vars.list);
+
+
 
     // Focus Out Event
-    input.addEventListener("focusout", function(e){
+    autocomplyeet.vars.input.addEventListener("focusout", function (e) {
         if (e.relatedTarget == null) {
-            autocomplete.innerHTML = "";
-            ac_querySuggestion.innerText = "";
+            autocomplyeet.vars.list.innerHTML = "";
+            autocomplyeet.vars.querySuggestion.value = "";
         } else if (e.relatedTarget.className !== "ac-item") {
-            autocomplete.innerHTML = "";
-            ac_querySuggestion.innerText = "";
+            autocomplyeet.vars.list.innerHTML = "";
+            autocomplyeet.vars.querySuggestion.value = "";
         }
     });
 
     // Text Input Event
-    input.addEventListener("input", function(){
+    autocomplyeet.vars.input.addEventListener("input", function () {
 
-        if (input.value.length > 2) {
+        if (autocomplyeet.vars.input.value.length > 2) {
 
-            // Send request
-            var url = searchParams.server + input.value;
+            // If query length is large enough to scroll, then break;
+            if(autocomplyeet.vars.input.scrollWidth > autocomplyeet.vars.input.offsetWidth) {
+                console.log("length too large, cancel");
+                autocomplyeet.vars.querySuggestion.value = "";
+                return false;
+            }
 
-            ajaxRequest("GET", url, null, function(response){
-                var data = JSON.parse(response);
-                
-                if (data.length > 0) {
+            // Request new data
+            var url = autocomplyeet.options.server + autocomplyeet.vars.input.value;
+            var cacheHandle = autocomplyeet.vars.input.value.toLowerCase().replace(/\s/g, "");
+            var data = [];
 
-                    // Morph Data to correct casing
-                    var ac_suggest = data[0];
-                    ac_suggest = ac_suggest.substring(input.value.length);
-                    ac_suggest = input.value + ac_suggest;
+            if (autocomplyeet.cache[cacheHandle] !== undefined) {
+                // console.log("Cached Status", true, cacheHandle);
+                data = autocomplyeet.cache[cacheHandle];
+                autocomplyeet.fn.handleResponse(data);
 
-                    ac_querySuggestion.innerText =  ac_suggest;
-                    autocomplete.innerHTML = "";
-                    autocomplete.style.width = input.offsetWidth + "px";
+            } else {
+                // console.log("Cached Status", false, cacheHandle);
 
-                    // Print suggestions
-                    for(var i=0;i<data.length;i++){
-                        var item = document.createElement("li");
+                var xhr = new XMLHttpRequest();
+                xhr.onload = function () {
+                    if (xhr.status >= 200 && xhr.status < 300) {
 
-                        var output = data[i].replace(new RegExp('(' + input.value.toLowerCase() + ')'), '<span class="ac-highlight">'+ input.value +'</span>');
-                        item.innerHTML = output;
-                        item.setAttribute("tabindex", "1");
-                        item.classList.add("ac-item");
-                        autocomplete.appendChild(item);
+                        data = JSON.parse(xhr.response);
+                        // Send Data to handler
+                        autocomplyeet.fn.handleResponse(data);
+                        // Cache response data;
+                        autocomplyeet.cache[cacheHandle] = data;
 
-                        item.addEventListener("keydown", function(e){
-                            if (e.keyCode == "40") {
-                                e.preventDefault();
-                                this.nextSibling.focus();
-                            } else if (e.keyCode == "38"){
-                                if (this.previousSibling !== null ){
-                                    e.preventDefault();
-                                    this.previousSibling.focus();
-                                } else {
-                                    input.focus();
-                                }
-                            } else if (e.keyCode == "13") {
-                                e.preventDefault();
-                                ac_querySuggestion.innerText = "";
-                                input.value = this.innerText;
-                                input.focus();
-                            }
-                        });
+                    } else {
+                        console.log('Failed to fetch autocomplete data');
+                    }
+                };
+                xhr.open('GET', url);
+                xhr.send();
 
-                        item.addEventListener("click", function(e){
-                            input.value = this.innerText;
-                            autocomplete.innerHTML = "";
-                            ac_querySuggestion.innerText = "";
-                            input.focus();
-                        });
 
-                        item.addEventListener("focusout", function(e){
-                            if (e.relatedTarget == null) {
-                                autocomplete.innerHTML = "";
-                                ac_querySuggestion.innerText = "";
-                            } else if (e.relatedTarget.className == "ac-item" || e.relatedTarget.id == "search") { 
-                                return false;
-                            } else {
-                                autocomplete.innerHTML = "";
-                                ac_querySuggestion.innerText = "";
-                            }
-
-                        });
-                    } 
-                } else {
-                    autocomplete.innerHTML = "";
-                    ac_querySuggestion.innerText = "";
-                }
-
-            });
+            }
+            autocomplyeet.fn.clearCache(autocomplyeet.options.cache);
         } else {
-            autocomplete.innerHTML = "";
-            ac_querySuggestion.innerText = "";
+            autocomplyeet.vars.list.innerHTML = "";
+            autocomplyeet.vars.querySuggestion.value = "";
         }
 
     });
 
 
-    input.addEventListener("keydown", function(e){
-        if (input.value.length > 2 && e.keyCode == "40" && document.querySelector("#ac-list li") !== null) {
+    autocomplyeet.vars.input.addEventListener("keydown", function (e) {
+        if (autocomplyeet.vars.input.value.length > 2 && e.keyCode == "40" && document.querySelector("#ac-list li") !== null) {
             e.preventDefault();
             document.querySelector("#ac-list li:first-child").focus();
         }
     });
+
+    if (autocomplyeet.options.cloneCSS) {
+        var timeout;
+        window.addEventListener("resize", function () {
+            if (!timeout) {
+                timeout = setTimeout(function () {
+                    timeout = null;
+                    autocomplyeet.fn.cloneCSS();
+                }, 200);
+            }
+        }, false);
+    }
+
+}
+
+autocomplyeet.fn.cloneCSS = function () {
+    var cssText = document.defaultView.getComputedStyle(autocomplyeet.vars.input, "").cssText;
+    autocomplyeet.vars.styles.innerHTML = "#ac-querySuggestion {" + cssText + "}";
+}
+
+
+autocomplyeet.fn.clearCache = function (size) {
+    // If cache length is over set value, delete the first item default 15
+    if (!size) {
+        size = 15;
+    }
+
+    var cacheLength = Object.keys(autocomplyeet.cache).length;
+    if (cacheLength > size) {
+        var dropItem = Object.keys(autocomplyeet.cache)[0];
+        // console.log("Clearing item from cache", dropItem);
+        delete autocomplyeet.cache[dropItem];
+    }
+}
+
+// Handle Data, plus send in 
+autocomplyeet.fn.handleResponse = function (data) {
+
+    if (data.length > 0) {
+        // Morph Data to correct casing
+        var ac_suggest = data[0];
+        ac_suggest = ac_suggest.substring(autocomplyeet.vars.input.value.length);
+        ac_suggest = autocomplyeet.vars.input.value + ac_suggest;
+
+        autocomplyeet.vars.querySuggestion.value = ac_suggest;
+        autocomplyeet.vars.list.innerHTML = "";
+        autocomplyeet.vars.list.style.width = autocomplyeet.vars.input.offsetWidth + "px";
+
+        // Print suggestions
+        for (var i = 0; i < data.length; i++) {
+            var item = document.createElement("li");
+
+            var output = data[i].replace(new RegExp('(' + autocomplyeet.vars.input.value.toLowerCase() + ')'), '<span class="ac-highlight">' + autocomplyeet.vars.input.value + '</span>');
+            item.innerHTML = output;
+            item.setAttribute("tabindex", "1");
+            item.classList.add("ac-item");
+            autocomplyeet.vars.list.appendChild(item);
+
+            item.addEventListener("keydown", function (e) {
+                if (e.keyCode == "40") {
+                    e.preventDefault();
+                    this.nextSibling.focus();
+                } else if (e.keyCode == "38") {
+                    if (this.previousSibling !== null) {
+                        e.preventDefault();
+                        this.previousSibling.focus();
+                    } else {
+                        autocomplyeet.vars.input.focus();
+                    }
+                } else if (e.keyCode == "13") {
+                    e.preventDefault();
+                    autocomplyeet.vars.querySuggestion.value = "";
+                    autocomplyeet.vars.input.value = this.innerText;
+                    autocomplyeet.vars.input.focus();
+                }
+            });
+
+            item.addEventListener("click", function (e) {
+                autocomplyeet.vars.input.value = this.innerText;
+                autocomplyeet.vars.list.innerHTML = "";
+                autocomplyeet.vars.querySuggestion.value = "";
+                autocomplyeet.vars.input.focus();
+            });
+
+            item.addEventListener("focusout", function (e) {
+                if (e.relatedTarget == null) {
+                    autocomplyeet.vars.list.innerHTML = "";
+                    autocomplyeet.vars.querySuggestion.value = "";
+                } else if (e.relatedTarget.className == "ac-item" || e.relatedTarget.id == "search") {
+                    return false;
+                } else {
+                    autocomplyeet.vars.list.innerHTML = "";
+                    autocomplyeet.vars.querySuggestion.value = "";
+                }
+
+            });
+        }
+    } else {
+        autocomplyeet.vars.list.innerHTML = "";
+        autocomplyeet.vars.querySuggestion.value = "";
+    }
+
 }
