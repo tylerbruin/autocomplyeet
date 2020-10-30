@@ -15,9 +15,11 @@ autocomplyeet.fn.init = function () {
 
 
     // if IE11, Disable Query Finisher as we like to support IE11 but also we kinda dont.
-    var isIE11 = !!window.MSInputMethodContext && !!document.documentMode;
-    if(isIE11) {
+    autocomplyeet.vars.isIE11 = !!window.MSInputMethodContext && !!document.documentMode;
+
+    if(autocomplyeet.vars.isIE11) {
         autocomplyeet.options.cloneCSS = false;
+        autocomplyeet.vars.querySuggestion.style.display = "none";
     }
 
 
@@ -42,7 +44,7 @@ autocomplyeet.fn.init = function () {
         // autocomplyeet.vars.querySuggestion.style.width = autocomplyeet.vars.input.clientWidth + "px";
     }
 
-    if(!isIE11) {
+    if(!autocomplyeet.vars.isIE11) {
         // Query Finisher, Create Fake Input to display query suggestion
         autocomplyeet.vars.querySuggestion = document.createElement("input");
         autocomplyeet.vars.querySuggestion.setAttribute("id", "ac-querySuggestion");
@@ -80,7 +82,7 @@ autocomplyeet.fn.init = function () {
 
             // If query length is large enough to scroll, then break;
             if(autocomplyeet.vars.input.scrollWidth > autocomplyeet.vars.input.offsetWidth) {
-                console.log("length too large, cancel");
+                // console.log("length too large, cancel");
                 autocomplyeet.vars.querySuggestion.value = "";
                 return false;
             }
@@ -148,8 +150,12 @@ autocomplyeet.fn.init = function () {
 }
 
 autocomplyeet.fn.cloneCSS = function () {
-    var cssText = document.defaultView.getComputedStyle(autocomplyeet.vars.input, "").cssText;
-    autocomplyeet.vars.styles.innerHTML = "#ac-querySuggestion {" + cssText + "}";
+
+    if (autocomplyeet.options.cloneCSS) {
+        var cssText = document.defaultView.getComputedStyle(autocomplyeet.vars.input, "").cssText;
+        autocomplyeet.vars.styles.innerHTML = "#ac-querySuggestion {" + cssText + "}";
+    }
+
 }
 
 
