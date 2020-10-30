@@ -13,10 +13,18 @@ window.autocomplyeet = {
 
 autocomplyeet.fn.init = function () {
 
+
+    // if IE11, Disable Query Finisher as we like to support IE11 but also we kinda dont.
+    var isIE11 = !!window.MSInputMethodContext && !!document.documentMode;
+    if(isIE11) {
+        autocomplyeet.options.cloneCSS = false;
+    }
+
+
     autocomplyeet.vars.input = document.querySelector(autocomplyeet.options.id);
     autocomplyeet.vars.input.setAttribute("autocomplete", "off");
     autocomplyeet.vars.input.style.backgroundColor = "transparent";
-    
+
     // Create Autocomplete Elements
     autocomplyeet.vars.list = document.createElement("ul");
     autocomplyeet.vars.list.setAttribute("id", "ac-list");
@@ -34,12 +42,16 @@ autocomplyeet.fn.init = function () {
         // autocomplyeet.vars.querySuggestion.style.width = autocomplyeet.vars.input.clientWidth + "px";
     }
 
-    // Create Fake Input
-    autocomplyeet.vars.querySuggestion = document.createElement("input");
-    autocomplyeet.vars.querySuggestion.setAttribute("id", "ac-querySuggestion");
-    autocomplyeet.vars.querySuggestion.setAttribute("tabIndex", -1);
-    autocomplyeet.vars.querySuggestion.setAttribute("readonly", true);
-    autocomplyeet.vars.querySuggestion.setAttribute("aria-hidden", true);
+    if(!isIE11) {
+        // Query Finisher, Create Fake Input to display query suggestion
+        autocomplyeet.vars.querySuggestion = document.createElement("input");
+        autocomplyeet.vars.querySuggestion.setAttribute("id", "ac-querySuggestion");
+        autocomplyeet.vars.querySuggestion.setAttribute("tabIndex", -1);
+        autocomplyeet.vars.querySuggestion.setAttribute("readonly", true);
+        autocomplyeet.vars.querySuggestion.setAttribute("aria-hidden", true);
+    }
+
+
 
     // Reassemble the DOM
     autocomplyeet.vars.container.appendChild(autocomplyeet.vars.styles);
